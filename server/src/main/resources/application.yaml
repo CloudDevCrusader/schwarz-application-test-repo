@@ -6,6 +6,19 @@ ktor:
       - com.schwarzdigitale.HttpKt.configureHttp
       - com.schwarzdigitale.SerializationKt.configureSerialization
       - com.schwarzdigitale.ServerOpenTelemetryKt.configureOpenTelemetry
-      - com.schwarzdigitale.PostgresKt.configurePostgres
-      - com.schwarzdigitale.ResourcesKt.configureResources
+      - com.schwarzdigitale.StatusPagesKt.configureStatusPages
+      - com.schwarzdigitale.auth.AuthConfigKt.configureAuth
+      - com.schwarzdigitale.DatabaseKt.configureDatabase
       - com.schwarzdigitale.RoutingKt.configureRouting
+
+database:
+  embedded: true
+  url: "jdbc:postgresql://localhost:5432/library"
+  user: "postgres"
+  password: "postgres"
+
+jwt:
+  secret: "your-secret-key-change-in-production-min-256-bits-long"
+  issuer: "library-application"
+  audience: "library-users"
+  validity: "3600000"
