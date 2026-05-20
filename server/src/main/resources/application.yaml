@@ -1,0 +1,11 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.schwarzdigitale.HttpKt.configureHttp
+      - com.schwarzdigitale.SerializationKt.configureSerialization
+      - com.schwarzdigitale.ServerOpenTelemetryKt.configureOpenTelemetry
+      - com.schwarzdigitale.PostgresKt.configurePostgres
+      - com.schwarzdigitale.ResourcesKt.configureResources
+      - com.schwarzdigitale.RoutingKt.configureRouting
