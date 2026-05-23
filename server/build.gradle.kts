@@ -41,6 +41,10 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.openfolder.kotlinAsyncapiKtor)
     implementation(libs.postgresql)
+    
+    // Flyway for database migrations
+    implementation("org.flywaydb:flyway-core:10.8.1")
+    implementation("org.flywaydb:flyway-database-postgresql:10.8.1")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

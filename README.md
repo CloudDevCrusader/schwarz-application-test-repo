@@ -1,12 +1,6 @@
 # Library Management System - RESTful API
 
-A modern RESTful web service for managing an online library application built with Kotlin and Ktor.
-
-## Features
-
-### Core Functionality
-- **Customer Management**: CRUD operations for library customers with authentication
-- **Category Management**: Organize books into categories
+A modern RESTful web service for managing an--*-        ^   ^   nize books into categories
 - **Book Management**: Full book catalog with CRUD operations
 - **JWT Authentication**: Secure token-based authentication
 - **Email Validation**: RFC-compliant email validation
@@ -14,7 +8,7 @@ A modern RESTful web service for managing an online library application built wi
 - **Public & Authenticated Endpoints**: Anonymous users can read, authenticated users can write
 
 ### Technical Stack
-- **Framework**: Ktor 3.5.0
+0- **Framework**: Ktor 3.5.0
 - **Language**: Kotlin 2.3.21
 - **Database**: PostgreSQL / H2 (embedded for dev/test)
 - **ORM**: Exposed
