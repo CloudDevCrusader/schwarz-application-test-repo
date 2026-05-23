@@ -1,12 +1,13 @@
-package com.schwarzdigitale.utils
+package com.schwarzdigital.utils
 
 object Validator {
-    private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
-    
+    // Regex that prevents consecutive dots, leading/trailing dots
+    private val emailRegex = "^[A-Za-z0-9+_-]+(\\.[A-Za-z0-9+_-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$".toRegex()
+
     fun isValidEmail(email: String): Boolean {
         return email.matches(emailRegex)
     }
-    
+
     fun validateEmail(email: String): ValidationResult {
         return if (isValidEmail(email)) {
             ValidationResult.Valid
@@ -14,14 +15,14 @@ object Validator {
             ValidationResult.Invalid("Invalid email format")
         }
     }
-    
+
     fun validatePassword(password: String): ValidationResult {
         return when {
             password.length < 6 -> ValidationResult.Invalid("Password must be at least 6 characters")
             else -> ValidationResult.Valid
         }
     }
-    
+
     fun validateName(name: String): ValidationResult {
         return when {
             name.isBlank() -> ValidationResult.Invalid("Name cannot be blank")
@@ -34,8 +35,10 @@ object Validator {
 
 sealed class ValidationResult {
     object Valid : ValidationResult()
+
     data class Invalid(val message: String) : ValidationResult()
-    
+
     fun isValid(): Boolean = this is Valid
+
     fun getErrorMessage(): String? = (this as? Invalid)?.message
 }

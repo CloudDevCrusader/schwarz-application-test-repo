@@ -1,8 +1,8 @@
-package com.schwarzdigitale
+package com.schwarzdigital
 
 import io.ktor.http.*
-import io.ktor.server.request.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.opentelemetry.api.trace.SpanKind
 import io.opentelemetry.instrumentation.ktor.v3_0.KtorServerTelemetry
 

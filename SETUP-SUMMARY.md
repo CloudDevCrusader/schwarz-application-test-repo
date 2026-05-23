@@ -45,7 +45,7 @@ All Docker, CI/CD, and database infrastructure has been successfully configured!
 - `reset.sh` - Resets database completely
 - `README.md` - Comprehensive documentation
 
-✅ **Updated DatabaseFactory** (`/server/src/main/kotlin/com/schwarzdigitale/database/DatabaseFactory.kt`)
+✅ **Updated DatabaseFactory** (`/server/src/main/kotlin/com/schwarzdigital/database/DatabaseFactory.kt`)
 - Integrated Flyway for PostgreSQL
 - Maintains H2 support for testing
 - Automatic migrations on startup

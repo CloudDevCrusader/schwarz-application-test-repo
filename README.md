@@ -1,14 +1,20 @@
-# Library Management System - RESTful API
+# Job-Application Project: Library Management System - RESTful API with ktor and Kotlin
 
-A modern RESTful web service for managing an--*-        ^   ^   nize books into categories
+A modern RESTful web service for managing an online library application built with Kotlin and Ktor.
+
+## Features
+
+- **User Management**: Customer registration and authentication
+- **Category Management**: Organize books into categories
 - **Book Management**: Full book catalog with CRUD operations
 - **JWT Authentication**: Secure token-based authentication
 - **Email Validation**: RFC-compliant email validation
 - **Password Hashing**: BCrypt password hashing for security
 - **Public & Authenticated Endpoints**: Anonymous users can read, authenticated users can write
 
-### Technical Stack
-0- **Framework**: Ktor 3.5.0
+## Technical Stack
+
+- **Framework**: Ktor 3.5.0
 - **Language**: Kotlin 2.3.21
 - **Database**: PostgreSQL / H2 (embedded for dev/test)
 - **ORM**: Exposed
@@ -18,221 +24,115 @@ A modern RESTful web service for managing an--*-        ^   ^   nize books into 
 - **Build Tool**: Gradle with Kotlin DSL
 - **Monitoring**: OpenTelemetry
 
+## Quick Start
+
+### Prerequisites
+
+- JDK 25 or higher
+- Docker and Docker Compose (optional)
+- Gradle 8.x (included via wrapper)
+
+### Running with Docker (Recommended)
+
+```bash
+# 1. Copy and configure environment
+cp .env.example .env
+
+# 2. Start services
+docker-compose up -d
+
+# 3. Access the application
+open http://localhost:8080/swagger
+```
+
+### Running Standalone
+
+```bash
+# 1. Build the project
+./gradlew build
+
+# 2. Run the server
+./gradlew :server:run
+
+# 3. Access at http://localhost:8080
+```
+
+### Using the Development CLI
+
+```bash
+# Show all available commands
+./dev help
+
+# Start development
+./dev db:start    # Start database
+./dev test        # Run tests
+./dev start       # Start server
+
+# Run tests with coverage
+./dev test:coverage
+
+# Debug mode
+./dev debug
+```
+
+## API Documentation
+
+Once running, access the interactive API documentation:
+
+- **Swagger UI**: http://localhost:8080/swagger
+- **Alternative UI**: http://localhost:8080/api-docs
+- **OpenAPI Spec**: http://localhost:8080/openapi
+
+For detailed API documentation, see [API-DOCUMENTATION.md](./API-DOCUMENTATION.md)
+
 ## Project Structure
 
 ```
 server/
 ├── src/
-│   ├── main/kotlin/com/schwarzdigitale/
+│   ├── main/kotlin/com/schwarzdigital/
 │   │   ├── auth/                 # Authentication & JWT
-│   │   │   ├── AuthConfig.kt
-│   │   │   ├── AuthModels.kt
-│   │   │   └── JwtService.kt
 │   │   ├── database/             # Database configuration
-│   │   │   └── DatabaseFactory.kt
 │   │   ├── domain/
 │   │   │   ├── models/           # Domain models
-│   │   │   │   ├── Book.kt
-│   │   │   │   ├── Category.kt
-│   │   │   │   └── Customer.kt
 │   │   │   └── repositories/     # Data access layer
-│   │   │       ├── BookRepository.kt
-│   │   │       ├── CategoryRepository.kt
-│   │   │       └── CustomerRepository.kt
 │   │   ├── routes/               # API endpoints
-│   │   │   ├── AuthRoutes.kt
-│   │   │   ├── BookRoutes.kt
-│   │   │   ├── CategoryRoutes.kt
-│   │   │   └── CustomerRoutes.kt
 │   │   ├── utils/                # Utilities
-│   │   │   └── Validator.kt
-│   │   ├── Database.kt
-│   │   ├── Routing.kt
-│   │   ├── StatusPages.kt        # Error handling
-│   │   └── main.kt
+│   │   └── main.kt               # Application entry point
+│   ├── resources/
+│   │   ├── db/migration/         # Flyway migrations
+│   │   └── openapi/              # OpenAPI specification
 │   └── test/kotlin/              # Unit & integration tests
-│       ├── auth/
-│       ├── domain/repositories/
-│       ├── utils/
-│       └── LibraryApiTest.kt
 ```
 
-## API Endpoints
+## API Endpoints Summary
 
 ### Authentication (Public)
-
-#### Register
-```
-POST /auth/register
-Content-Type: application/json
-
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
-
-Response: 201 Created
-{
-  "id": 1,
-  "name": "John Doe",
-  "email": "john@example.com"
-}
-```
-
-#### Login
-```
-POST /auth/login
-Content-Type: application/json
-
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-
-Response: 200 OK
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "customer": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com"
-  }
-}
-```
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login and get JWT token
 
 ### Categories
-
-#### Get All Categories (Public)
-```
-GET /categories
-```
-
-#### Get Category by ID (Public)
-```
-GET /categories/{id}
-```
-
-#### Create Category (Authenticated)
-```
-POST /categories
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "name": "Science Fiction",
-  "description": "Science fiction and futuristic books"
-}
-```
-
-#### Update Category (Authenticated)
-```
-PUT /categories/{id}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "name": "Updated Name",
-  "description": "Updated description"
-}
-```
-
-#### Delete Category (Authenticated)
-```
-DELETE /categories/{id}
-Authorization: Bearer {token}
-```
+- `GET /categories` - Get all categories (public)
+- `GET /categories/{id}` - Get category by ID (public)
+- `POST /categories` - Create category (🔒 authenticated)
+- `PUT /categories/{id}` - Update category (🔒 authenticated)
+- `DELETE /categories/{id}` - Delete category (🔒 authenticated)
 
 ### Books
-
-#### Get All Books (Public)
-```
-GET /books
-```
-
-#### Get Book by ID (Public)
-```
-GET /books/{id}
-```
-
-#### Get Books by Category (Public)
-```
-GET /books/category/{categoryId}
-```
-
-#### Create Book (Authenticated)
-```
-POST /books
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "title": "1984",
-  "author": "George Orwell",
-  "publisher": "Secker & Warburg",
-  "publishingYear": 1949,
-  "categoryId": 1
-}
-```
-
-#### Update Book (Authenticated)
-```
-PUT /books/{id}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "title": "Updated Title",
-  "publishingYear": 1950
-}
-```
-
-#### Delete Book (Authenticated)
-```
-DELETE /books/{id}
-Authorization: Bearer {token}
-```
+- `GET /books` - Get all books (public)
+- `GET /books/{id}` - Get book by ID (public)
+- `GET /books/category/{categoryId}` - Get books by category (public)
+- `POST /books` - Create book (🔒 authenticated)
+- `PUT /books/{id}` - Update book (🔒 authenticated)
+- `DELETE /books/{id}` - Delete book (🔒 authenticated)
 
 ### Customers (All Authenticated)
+- `GET /customers` - Get all customers (🔒)
+- `GET /customers/{id}` - Get customer by ID (🔒)
+- `PUT /customers/{id}` - Update customer (🔒)
+- `DELETE /customers/{id}` - Delete customer (🔒)
 
-#### Get All Customers
-```
-GET /customers
-Authorization: Bearer {token}
-```
-
-#### Get Customer by ID
-```
-GET /customers/{id}
-Authorization: Bearer {token}
-```
-
-#### Update Customer
-```
-PUT /customers/{id}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "name": "New Name",
-  "email": "newemail@example.com"
-}
-```
-
-#### Delete Customer
-```
-DELETE /customers/{id}
-Authorization: Bearer {token}
-```
-
-## Getting Started
-
-### Prerequisites
-- JDK 21 or higher
-- Gradle 8.x (included via wrapper)
-- PostgreSQL (optional - H2 is used by default)
-
-### Configuration
+## Configuration
 
 Edit `server/src/main/resources/application.yaml`:
 
@@ -250,51 +150,24 @@ jwt:
   validity: "3600000"  # 1 hour in milliseconds
 ```
 
-### Running the Application
+For Docker deployment, use `.env` file (copy from `.env.example`).
 
-```bash
-# Build the project
-./gradlew build
-
-# Run the server
-./gradlew :server:run
-
-# The server starts at http://localhost:8080
-```
-
-### Running Tests
+## Testing
 
 ```bash
 # Run all tests
 ./gradlew test
 
-# Run tests with reports
-./gradlew test --info
+# Run tests with coverage
+./dev test:coverage
 
 # Run specific test class
 ./gradlew test --tests "ValidatorTest"
 ```
 
-## Testing
-
-The project includes comprehensive tests using Kotest framework:
-
-### Unit Tests
-- **ValidatorTest**: Email, password, and name validation
-- **JwtServiceTest**: JWT token generation and verification
-- **CustomerRepositoryTest**: Customer CRUD operations
-- **CategoryRepositoryTest**: Category management with book counts
-- **BookRepositoryTest**: Book management with category relationships
-
-### Integration Tests
-- **LibraryApiTest**: End-to-end API testing with authentication flows
-
-## API Documentation
-
-Once the server is running, access the interactive API documentation:
-
-- **Swagger UI**: http://localhost:8080/swagger
-- **OpenAPI Spec**: http://localhost:8080/openapi
+The project includes comprehensive tests:
+- **Unit Tests**: Validator, JWT Service, Repositories
+- **Integration Tests**: End-to-end API testing
 
 ## Security
 
@@ -307,25 +180,18 @@ Once the server is running, access the interactive API documentation:
 
 ## Validation Rules
 
-### Email
-- Must be valid email format
-- RFC-compliant validation
-
-### Password
-- Minimum 6 characters
-
-### Customer Name
-- Minimum 2 characters
-- Maximum 255 characters
-- Cannot be blank
+### Customer
+- **Email**: Valid RFC-compliant email format
+- **Password**: Minimum 6 characters
+- **Name**: 2-255 characters, cannot be blank
 
 ### Book
-- Title, author, publisher cannot be blank
-- Publishing year must be between 1000 and 2100
-- Must be assigned to existing category
+- **Title, Author, Publisher**: Cannot be blank
+- **Publishing Year**: Between 1000 and 2100
+- **Category**: Must be assigned to existing category
 
 ### Category
-- Name and description cannot be blank
+- **Name, Description**: Cannot be blank
 - Cannot delete category with existing books
 
 ## Error Handling
@@ -345,7 +211,7 @@ Common error codes:
 - `EMAIL_EXISTS`: Email already registered
 - `NOT_FOUND`: Resource not found
 - `UNAUTHORIZED`: Authentication required
-- `CONFLICT`: Resource conflict (e.g., deleting category with books)
+- `CONFLICT`: Resource conflict
 - `SERVER_ERROR`: Internal server error
 
 ## Database Schema
@@ -355,56 +221,129 @@ Common error codes:
 - name
 - email (UNIQUE)
 - password_hash
-- created_at
-- updated_at
+- created_at, updated_at
 
 ### Categories
 - id (PRIMARY KEY)
 - name (UNIQUE)
 - description
-- created_at
-- updated_at
+- created_at, updated_at
 
 ### Books
 - id (PRIMARY KEY)
-- title
-- author
-- publisher
+- title, author, publisher
 - publishing_year
 - category_id (FOREIGN KEY → Categories)
-- created_at
-- updated_at
+- created_at, updated_at
 
-## Development
+## Documentation
 
-### Code Style
-- Kotlin official coding conventions
-- Consistent formatting with Kotlin DSL
-- Repository pattern for data access
-- DTOs for API contracts
+- **[API-DOCUMENTATION.md](./API-DOCUMENTATION.md)** - Complete API reference and examples
+- **[OPENAPI-QUICKSTART.md](./OPENAPI-QUICKSTART.md)** - Quick reference for OpenAPI/Swagger
+- **[DOCKER-README.md](./DOCKER-README.md)** - Docker and CI/CD setup guide
+- **[CLI-README.md](./CLI-README.md)** - Development CLI tools documentation
+- **[scripts/db/README.md](./scripts/db/README.md)** - Database management guide
 
-### Architecture
+## Development CLI Tools
+
+The project includes a comprehensive CLI for common tasks:
+
+```bash
+./dev help              # Show all commands
+./dev test:coverage     # Run tests with coverage
+./dev start             # Start server
+./dev debug             # Start in debug mode
+./dev db:start          # Start PostgreSQL
+./dev clean:all         # Deep clean
+./dev version:bump      # Bump version
+```
+
+See [CLI-README.md](./CLI-README.md) for complete documentation.
+
+## CI/CD Pipeline
+
+GitHub Actions workflow automatically:
+- ✅ Runs tests with PostgreSQL
+- ✅ Builds Docker images (multi-platform)
+- ✅ Pushes to GitHub Container Registry
+- ✅ Creates deployment packages
+- ✅ Runs security scans with Trivy
+- ✅ Publishes test results
+
+## Deployment
+
+### Using Docker
+
+```bash
+# Build and start
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
+### Creating Deployment Package
+
+```bash
+./scripts/create-deployment-package.sh
+```
+
+This creates `deployment-*.tar.gz` with everything needed for production deployment.
+
+See [DOCKER-README.md](./DOCKER-README.md) for detailed deployment instructions.
+
+## Project Requirements
+
+This implementation fulfills all requirements from the practical exercise:
+
+✅ **1. CRUD operations for Customer resource**
+- Register (create), get (read), update, delete endpoints
+- Email validation, password hashing, JWT authentication
+
+✅ **2. Email validation**
+- RFC-compliant email validation in `Validator.kt`
+- Validates format on registration
+
+✅ **3. Login endpoint with token**
+- `/auth/login` returns JWT token
+- Token used for all authenticated endpoints
+
+✅ **4. CRUD operations for Category and Books**
+- Full CRUD for both resources
+- Category includes book count
+- Books linked to categories via foreign key
+
+✅ **5. Tests for endpoints**
+- Comprehensive test suite with Kotest
+- Unit tests for all components
+- Integration tests for API endpoints
+
+**Additional Features:**
+- Docker & docker-compose setup
+- GitHub Actions CI/CD
+- Database migrations with Flyway
+- Database seed data
+- OpenAPI/Swagger documentation
+- Development CLI tools
+- Production-ready deployment package
+
+## Architecture
+
 - **Layered Architecture**: Routes → Repositories → Database
 - **Dependency Injection**: Manual DI for simplicity
 - **DTOs**: Separate request/response models from domain models
 - **Error Handling**: Centralized with StatusPages plugin
 
-## Future Enhancements
+## Contributing
 
-From the kick-off requirements, these features could be added:
-
-- [ ] Docker & docker-compose setup
-- [ ] GitHub Actions CI/CD
-- [ ] Database migrations with Flyway
-- [ ] Database seeds
-- [ ] E2E tests
-- [ ] Git commit hooks for linting/testing
-- [ ] UML diagrams
-- [ ] OAuth2 integration
-- [ ] Rate limiting
-- [ ] Pagination for list endpoints
-- [ ] Book search functionality
-- [ ] Book borrowing/lending system
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with tests
+4. Ensure tests pass: `./gradlew test`
+5. Submit a pull request
 
 ## License
 
@@ -413,3 +352,7 @@ This project is for educational/demonstration purposes.
 ## Authors
 
 Built as a practical exercise for demonstrating RESTful API development with Kotlin and Ktor.
+
+---
+
+For detailed setup and usage instructions, see the documentation files linked above.

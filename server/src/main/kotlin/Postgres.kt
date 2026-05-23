@@ -1,4 +1,4 @@
-package com.schwarzdigitale
+package com.schwarzdigital
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,7 +13,6 @@ fun Application.configurePostgres() {
     val cityService = CityService(dbConnection)
 
     routing {
-
         // Create city
         post("/cities") {
             val city = call.receive<City>()

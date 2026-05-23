@@ -1,4 +1,4 @@
-package com.schwarzdigitale.auth
+package com.schwarzdigital.auth
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -8,7 +8,7 @@ import io.ktor.server.auth.jwt.*
 
 fun Application.configureAuth() {
     val jwtService = JwtService(environment)
-    
+
     install(Authentication) {
         jwt("auth-jwt") {
             realm = "Library Application"
@@ -17,7 +17,7 @@ fun Application.configureAuth() {
                     .require(Algorithm.HMAC256(jwtService.getSecret()))
                     .withAudience(jwtService.getAudience())
                     .withIssuer(jwtService.getIssuer())
-                    .build()
+                    .build(),
             )
             validate { credential ->
                 if (credential.payload.getClaim("email").asString() != null) {

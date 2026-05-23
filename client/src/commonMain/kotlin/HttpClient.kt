@@ -1,4 +1,4 @@
-package com.schwarzdigitale
+package com.schwarzdigital
 
 import io.ktor.client.HttpClient
 import io.ktor.client.*

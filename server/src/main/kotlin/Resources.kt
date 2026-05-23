@@ -1,4 +1,4 @@
-package com.schwarzdigitale
+package com.schwarzdigital
 
 import io.ktor.server.application.*
 import io.ktor.server.resources.*

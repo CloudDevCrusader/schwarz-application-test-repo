@@ -4,15 +4,15 @@ plugins {
     alias(ktorLibs.plugins.ktor)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
+    alias(libs.plugins.ktlint)
 }
-
 
 application {
     mainClass = "io.ktor.server.netty.EngineMain"
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 tasks.withType<Test>().configureEach {
@@ -42,7 +42,7 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.openfolder.kotlinAsyncapiKtor)
     implementation(libs.postgresql)
-    
+
     // Flyway for database migrations
     implementation("org.flywaydb:flyway-core:10.8.1")
     implementation("org.flywaydb:flyway-database-postgresql:10.8.1")

@@ -1,4 +1,4 @@
-package com.schwarzdigitale
+package com.schwarzdigital
 
 import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk

@@ -1,6 +1,6 @@
-package com.schwarzdigitale
+package com.schwarzdigital
 
-import com.schwarzdigitale.database.DatabaseFactory
+import com.schwarzdigital.database.DatabaseFactory
 import io.ktor.server.application.*
 
 fun Application.configureDatabase() {

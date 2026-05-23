@@ -1,9 +1,9 @@
-package com.schwarzdigitale.domain.models
+package com.schwarzdigital.domain.models
 
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.javatime.datetime
-import java.time.LocalDateTime
+import org.jetbrains.exposed.sql.javatime.timestamp
+import java.time.Instant
 
 // Database Table Definition
 object Books : IntIdTable("books") {
@@ -12,8 +12,8 @@ object Books : IntIdTable("books") {
     val publisher = varchar("publisher", 255)
     val publishingYear = integer("publishing_year")
     val categoryId = reference("category_id", Categories)
-    val createdAt = datetime("created_at").default(LocalDateTime.now())
-    val updatedAt = datetime("updated_at").default(LocalDateTime.now())
+    val createdAt = timestamp("created_at").clientDefault { Instant.now() }
+    val updatedAt = timestamp("updated_at").clientDefault { Instant.now() }
 }
 
 // Domain Model
@@ -25,7 +25,7 @@ data class Book(
     val publisher: String,
     val publishingYear: Int,
     val categoryId: Int,
-    val categoryName: String? = null
+    val categoryName: String? = null,
 )
 
 // Request DTOs
@@ -35,7 +35,7 @@ data class BookCreateRequest(
     val author: String,
     val publisher: String,
     val publishingYear: Int,
-    val categoryId: Int
+    val categoryId: Int,
 )
 
 @Serializable
@@ -44,5 +44,5 @@ data class BookUpdateRequest(
     val author: String? = null,
     val publisher: String? = null,
     val publishingYear: Int? = null,
-    val categoryId: Int? = null
+    val categoryId: Int? = null,
 )
