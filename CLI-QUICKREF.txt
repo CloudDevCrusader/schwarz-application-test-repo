@@ -1,0 +1,98 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                          ┃
+┃          Library Management System - CLI                ┃
+┃                 Quick Reference Card                     ┃
+┃                                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+╔══════════════════════════════════════════════════════════╗
+║  TESTING & QUALITY                                       ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev test              Run all tests                   ║
+║  ./dev test:coverage     Run tests + coverage report     ║
+║  ./dev test:watch        Continuous testing              ║
+║  ./dev lint              Check code style                ║
+║  ./dev lint:fix          Auto-fix linting issues         ║
+║  ./dev format            Format code                     ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  SERVER MANAGEMENT                                       ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev start             Start server                    ║
+║  ./dev debug             Start in debug mode (port 5005) ║
+║  ./dev stop              Stop server                     ║
+║  ./dev restart           Restart server                  ║
+║  ./dev status            Check server status             ║
+║  ./dev logs              Show server logs                ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  DATABASE                                                ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev db:start          Start PostgreSQL (Docker)       ║
+║  ./dev db:stop           Stop database                   ║
+║  ./dev db:reset          Reset database ⚠️ DESTRUCTIVE   ║
+║  ./dev db:migrate        Run migrations                  ║
+║  ./dev db:backup         Backup database                 ║
+║  ./dev db:shell          Open PostgreSQL shell           ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  VERSION MANAGEMENT                                      ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev version           Show current version            ║
+║  ./dev version:major     Bump major (1.0.0 → 2.0.0)     ║
+║  ./dev version:minor     Bump minor (1.0.0 → 1.1.0)     ║
+║  ./dev version:patch     Bump patch (1.0.0 → 1.0.1)     ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  BUILD & DEPLOY                                          ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev build             Build project                   ║
+║  ./dev clean             Clean build artifacts           ║
+║  ./dev package           Create deployment package       ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  MAINTENANCE                                             ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev clean:all         Deep clean ⚠️ DESTRUCTIVE       ║
+║  ./dev clean:cache       Clean Gradle cache              ║
+║  ./dev clean:logs        Clean log files                 ║
+║  ./dev clean:docker      Clean Docker resources          ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  COMMON WORKFLOWS                                        ║
+╠══════════════════════════════════════════════════════════╣
+║  Development Setup:                                      ║
+║    ./dev db:start && ./dev test && ./dev start          ║
+║                                                          ║
+║  Run Tests with Coverage:                                ║
+║    ./dev test:coverage                                   ║
+║                                                          ║
+║  Debug Server:                                           ║
+║    ./dev debug                                           ║
+║    (Connect IDE to localhost:5005)                       ║
+║                                                          ║
+║  Release New Version:                                    ║
+║    ./dev test:coverage                                   ║
+║    ./dev version:minor                                   ║
+║    ./dev build                                           ║
+║                                                          ║
+║  Deep Clean & Rebuild:                                   ║
+║    ./dev clean:all && ./dev build && ./dev test         ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  HELP & DOCUMENTATION                                    ║
+╠══════════════════════════════════════════════════════════╣
+║  ./dev help              Show all commands               ║
+║  ./dev <command> --help  Command-specific help           ║
+║  cat CLI-README.md       Full documentation              ║
+║  cat CLI-SUMMARY.md      Implementation summary          ║
+╚══════════════════════════════════════════════════════════╝
+
+Legend:  ⚠️  = Destructive action (requires confirmation)

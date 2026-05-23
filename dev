@@ -1,0 +1,237 @@
+#!/bin/bash
+
+# Main CLI for project maintenance
+# A unified interface for all project tasks
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m' # No Color
+
+# Script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Show banner
+show_banner() {
+  echo -e "${CYAN}╔════════════════════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║                                                        ║${NC}"
+  echo -e "${CYAN}║         ${MAGENTA}Library Management System CLI${CYAN}                ║${NC}"
+  echo -e "${CYAN}║                                                        ║${NC}"
+  echo -e "${CYAN}╚════════════════════════════════════════════════════════╝${NC}"
+  echo ""
+}
+
+# Show help
+show_help() {
+  show_banner
+  echo -e "${BLUE}Usage:${NC} ./dev [command] [options]"
+  echo ""
+  echo -e "${GREEN}Commands:${NC}"
+  echo ""
+  echo -e "${YELLOW}  Testing & Quality:${NC}"
+  echo -e "    ${CYAN}test${NC}              Run tests"
+  echo -e "    ${CYAN}test:coverage${NC}     Run tests with coverage report"
+  echo -e "    ${CYAN}test:watch${NC}        Run tests in watch mode"
+  echo -e "    ${CYAN}lint${NC}              Check code style"
+  echo -e "    ${CYAN}lint:fix${NC}          Auto-fix linting issues"
+  echo -e "    ${CYAN}format${NC}            Format code"
+  echo ""
+  echo -e "${YELLOW}  Server Management:${NC}"
+  echo -e "    ${CYAN}start${NC}             Start the server"
+  echo -e "    ${CYAN}debug${NC}             Start the server in debug mode"
+  echo -e "    ${CYAN}stop${NC}              Stop the server"
+  echo -e "    ${CYAN}restart${NC}           Restart the server"
+  echo -e "    ${CYAN}status${NC}            Check server status"
+  echo -e "    ${CYAN}logs${NC}              Show server logs"
+  echo ""
+  echo -e "${YELLOW}  Build & Deploy:${NC}"
+  echo -e "    ${CYAN}build${NC}             Build the project"
+  echo -e "    ${CYAN}clean${NC}             Clean build artifacts"
+  echo -e "    ${CYAN}package${NC}           Create deployment package"
+  echo ""
+  echo -e "${YELLOW}  Version Management:${NC}"
+  echo -e "    ${CYAN}version${NC}           Show current version"
+  echo -e "    ${CYAN}version:bump${NC}      Bump version (patch)"
+  echo -e "    ${CYAN}version:major${NC}     Bump major version"
+  echo -e "    ${CYAN}version:minor${NC}     Bump minor version"
+  echo -e "    ${CYAN}version:patch${NC}     Bump patch version"
+  echo ""
+  echo -e "${YELLOW}  Database:${NC}"
+  echo -e "    ${CYAN}db:start${NC}          Start database (Docker)"
+  echo -e "    ${CYAN}db:stop${NC}           Stop database"
+  echo -e "    ${CYAN}db:reset${NC}          Reset database"
+  echo -e "    ${CYAN}db:migrate${NC}        Run database migrations"
+  echo -e "    ${CYAN}db:backup${NC}         Backup database"
+  echo -e "    ${CYAN}db:shell${NC}          Open database shell"
+  echo ""
+  echo -e "${YELLOW}  Maintenance:${NC}"
+  echo -e "    ${CYAN}clean:all${NC}         Deep clean (build, cache, logs)"
+  echo -e "    ${CYAN}clean:cache${NC}       Clean Gradle cache"
+  echo -e "    ${CYAN}clean:logs${NC}        Clean log files"
+  echo -e "    ${CYAN}clean:docker${NC}      Clean Docker resources"
+  echo ""
+  echo -e "${YELLOW}  Other:${NC}"
+  echo -e "    ${CYAN}deps${NC}              Show dependency tree"
+  echo -e "    ${CYAN}help${NC}              Show this help message"
+  echo ""
+  echo -e "${BLUE}Examples:${NC}"
+  echo -e "  ${GREEN}./dev test:coverage${NC}     - Run tests with coverage"
+  echo -e "  ${GREEN}./dev debug${NC}             - Start server in debug mode"
+  echo -e "  ${GREEN}./dev version:minor${NC}     - Bump minor version"
+  echo ""
+}
+
+# Main command router
+if [ $# -eq 0 ]; then
+  show_help
+  exit 0
+fi
+
+COMMAND=$1
+shift
+
+case $COMMAND in
+  # Testing
+  test)
+    "$SCRIPT_DIR/scripts/test.sh" "$@"
+    ;;
+  test:coverage)
+    "$SCRIPT_DIR/scripts/test.sh" --coverage "$@"
+    ;;
+  test:watch)
+    "$SCRIPT_DIR/scripts/test.sh" --watch "$@"
+    ;;
+    
+  # Linting & Formatting
+  lint)
+    "$SCRIPT_DIR/scripts/lint.sh" --check "$@"
+    ;;
+  lint:fix)
+    "$SCRIPT_DIR/scripts/lint.sh" --fix "$@"
+    ;;
+  format)
+    "$SCRIPT_DIR/scripts/lint.sh" --format "$@"
+    ;;
+    
+  # Server
+  start)
+    "$SCRIPT_DIR/scripts/server.sh" start "$@"
+    ;;
+  debug)
+    "$SCRIPT_DIR/scripts/server.sh" debug "$@"
+    ;;
+  stop)
+    "$SCRIPT_DIR/scripts/server.sh" stop "$@"
+    ;;
+  restart)
+    "$SCRIPT_DIR/scripts/server.sh" restart "$@"
+    ;;
+  status)
+    "$SCRIPT_DIR/scripts/server.sh" status "$@"
+    ;;
+  logs)
+    "$SCRIPT_DIR/scripts/server.sh" logs "$@"
+    ;;
+    
+  # Build
+  build)
+    show_banner
+    echo -e "${YELLOW}🏗️  Building project...${NC}"
+    ./gradlew build
+    echo -e "${GREEN}✅ Build complete!${NC}"
+    ;;
+  clean)
+    show_banner
+    echo -e "${YELLOW}🧹 Cleaning build artifacts...${NC}"
+    ./gradlew clean
+    echo -e "${GREEN}✅ Clean complete!${NC}"
+    ;;
+  package)
+    if [ -f "$SCRIPT_DIR/scripts/create-deployment-package.sh" ]; then
+      "$SCRIPT_DIR/scripts/create-deployment-package.sh" "$@"
+    else
+      show_banner
+      echo -e "${YELLOW}📦 Creating deployment package...${NC}"
+      ./gradlew :server:build
+      echo -e "${GREEN}✅ Package created in server/build/libs/${NC}"
+    fi
+    ;;
+    
+  # Version
+  version)
+    "$SCRIPT_DIR/scripts/version.sh" show "$@"
+    ;;
+  version:bump)
+    "$SCRIPT_DIR/scripts/version.sh" bump patch "$@"
+    ;;
+  version:major)
+    "$SCRIPT_DIR/scripts/version.sh" bump major "$@"
+    ;;
+  version:minor)
+    "$SCRIPT_DIR/scripts/version.sh" bump minor "$@"
+    ;;
+  version:patch)
+    "$SCRIPT_DIR/scripts/version.sh" bump patch "$@"
+    ;;
+    
+  # Database
+  db:start)
+    "$SCRIPT_DIR/scripts/db.sh" start "$@"
+    ;;
+  db:stop)
+    "$SCRIPT_DIR/scripts/db.sh" stop "$@"
+    ;;
+  db:reset)
+    "$SCRIPT_DIR/scripts/db.sh" reset "$@"
+    ;;
+  db:migrate)
+    "$SCRIPT_DIR/scripts/db.sh" migrate "$@"
+    ;;
+  db:backup)
+    "$SCRIPT_DIR/scripts/db.sh" backup "$@"
+    ;;
+  db:shell)
+    "$SCRIPT_DIR/scripts/db.sh" shell "$@"
+    ;;
+    
+  # Cleanup
+  clean:all)
+    "$SCRIPT_DIR/scripts/cleanup.sh" all "$@"
+    ;;
+  clean:cache)
+    "$SCRIPT_DIR/scripts/cleanup.sh" cache "$@"
+    ;;
+  clean:logs)
+    "$SCRIPT_DIR/scripts/cleanup.sh" logs "$@"
+    ;;
+  clean:docker)
+    "$SCRIPT_DIR/scripts/cleanup.sh" docker "$@"
+    ;;
+    
+  # Dependencies
+  deps)
+    show_banner
+    echo -e "${YELLOW}📦 Dependency tree:${NC}"
+    echo ""
+    ./gradlew dependencies --configuration runtimeClasspath
+    ;;
+    
+  # Help
+  help|-h|--help)
+    show_help
+    ;;
+    
+  *)
+    show_banner
+    echo -e "${RED}❌ Unknown command: $COMMAND${NC}"
+    echo ""
+    echo -e "${YELLOW}Run './dev help' for available commands${NC}"
+    exit 1
+    ;;
+esac

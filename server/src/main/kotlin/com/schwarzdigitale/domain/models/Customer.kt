@@ -20,7 +20,7 @@ data class Customer(
     val id: Int? = null,
     val name: String,
     val email: String,
-    @Serializable(with = kotlinx.serialization.Transient::class)
+    @kotlinx.serialization.Transient
     val passwordHash: String? = null
 )
 
