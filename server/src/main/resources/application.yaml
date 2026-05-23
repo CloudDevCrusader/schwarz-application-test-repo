@@ -3,13 +3,13 @@ ktor:
     port: 8080
   application:
     modules:
-      - com.schwarzdigitale.HttpKt.configureHttp
-      - com.schwarzdigitale.SerializationKt.configureSerialization
-      - com.schwarzdigitale.ServerOpenTelemetryKt.configureOpenTelemetry
-      - com.schwarzdigitale.StatusPagesKt.configureStatusPages
-      - com.schwarzdigitale.auth.AuthConfigKt.configureAuth
-      - com.schwarzdigitale.DatabaseKt.configureDatabase
-      - com.schwarzdigitale.RoutingKt.configureRouting
+      - com.schwarzdigital.HttpKt.configureHttp
+      - com.schwarzdigital.SerializationKt.configureSerialization
+      - com.schwarzdigital.ServerOpenTelemetryKt.configureOpenTelemetry
+      - com.schwarzdigital.StatusPagesKt.configureStatusPages
+      - com.schwarzdigital.auth.AuthConfigKt.configureAuth
+      - com.schwarzdigital.DatabaseKt.configureDatabase
+      - com.schwarzdigital.RoutingKt.configureRouting
 
 database:
   embedded: true
