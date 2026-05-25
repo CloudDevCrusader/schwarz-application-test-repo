@@ -69,7 +69,8 @@ class LibraryApiTest {
                     setBody(
                         CustomerCreateRequest(
                             name = testName,
-                            email = "register@test.com", // Use unique email for this test
+                            // Use unique email for this test
+                            email = "register@test.com",
                             password = testPassword,
                         ),
                     )

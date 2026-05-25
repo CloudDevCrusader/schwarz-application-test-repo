@@ -3,9 +3,6 @@ package com.schwarzdigital.utils
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.kotest.property.Arb
-import io.kotest.property.arbitrary.email
-import io.kotest.property.checkAll
 
 class ValidatorTest : FunSpec({
 

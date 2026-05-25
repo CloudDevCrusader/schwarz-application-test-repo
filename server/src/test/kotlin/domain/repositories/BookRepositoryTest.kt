@@ -167,7 +167,7 @@ class BookRepositoryTest : DescribeSpec({
             )
 
             val booksInCategory1 = bookRepository.findByCategory(testCategory.id!!)
-            val booksInCategory2 = bookRepository.findByCategory(category2.id!!)
+            val booksInCategory2 = bookRepository.findByCategory(category2.id)
 
             booksInCategory1 shouldHaveSize 2
             booksInCategory2 shouldHaveSize 1

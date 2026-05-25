@@ -10,11 +10,16 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  JAVA_VERSION: '21'
 
 jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     
     services:
       postgres:
@@ -35,43 +40,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup SDKMAN
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install java 25.0.3-tem
-          sdk install kotlin
-          sdk install gradle
-      
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: 'gradle'
+      
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
       
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       
       - name: Run tests
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.3-tem
-          ./gradlew test --no-daemon
+        run: ./gradlew test --no-daemon
         env:
           DATABASE_URL: jdbc:postgresql://localhost:5432/library_test
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
-      
-      - name: Generate test report
-        if: always()
-        run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk use java 25.0.3-tem
-          echo "Test results available in build/reports/tests/"
       
       - name: Upload test results
         if: always()
@@ -83,11 +70,14 @@ jobs:
             **/build/reports/tests/test/
           retention-days: 30
       
-      - name: Publish test results
+      - name: Publish test report
         if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: dorny/test-reporter@v1
         with:
-          files: '**/build/test-results/test/*.xml'
+          name: Test Results
+          path: '**/build/test-results/test/*.xml'
+          reporter: java-junit
+          fail-on-error: false
 
   build:
     name: Build and Push Docker Image
@@ -152,14 +142,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup SDKMAN and build
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install java 25.0.3-tem
-          sdk install gradle
-          sdk use java 25.0.3-tem
-          ./gradlew :server:build -x test --no-daemon
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: 'gradle'
+      
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      
+      - name: Build project
+        run: ./gradlew :server:build -x test --no-daemon
       
       - name: Create deployment package
         run: |
@@ -175,7 +169,7 @@ jobs:
       
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: deployment-*.tar.gz
         env:
@@ -185,6 +179,9 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: read
+      security-events: write
     
     steps:
       - name: Checkout code
