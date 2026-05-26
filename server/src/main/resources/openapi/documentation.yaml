@@ -313,6 +313,7 @@ paths:
   # Health Endpoints
   /:
     get:
+      operationId: root
       tags:
         - Health
       summary: Welcome message
@@ -328,6 +329,7 @@ paths:
 
   /health:
     get:
+      operationId: healthCheck
       tags:
         - Health
       summary: Health check
@@ -343,6 +345,7 @@ paths:
   # Authentication Endpoints
   /auth/register:
     post:
+      operationId: registerUser
       tags:
         - Authentication
       summary: Register new user
@@ -381,6 +384,7 @@ paths:
 
   /auth/login:
     post:
+      operationId: loginUser
       tags:
         - Authentication
       summary: User login
@@ -420,6 +424,7 @@ paths:
   # Book Endpoints
   /books:
     get:
+      operationId: getAllBooks
       tags:
         - Books
       summary: Get all books
@@ -441,6 +446,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     post:
+      operationId: createBook
       tags:
         - Books
       summary: Create new book
@@ -481,6 +487,7 @@ paths:
 
   /books/{id}:
     get:
+      operationId: getBookById
       tags:
         - Books
       summary: Get book by ID
@@ -519,6 +526,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     put:
+      operationId: updateBook
       tags:
         - Books
       summary: Update book
@@ -571,6 +579,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     delete:
+      operationId: deleteBook
       tags:
         - Books
       summary: Delete book
@@ -618,6 +627,7 @@ paths:
 
   /books/category/{categoryId}:
     get:
+      operationId: getBooksByCategory
       tags:
         - Books
       summary: Get books by category
@@ -654,6 +664,7 @@ paths:
   # Category Endpoints
   /categories:
     get:
+      operationId: getAllCategories
       tags:
         - Categories
       summary: Get all categories
@@ -675,6 +686,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     post:
+      operationId: createCategory
       tags:
         - Categories
       summary: Create new category
@@ -721,6 +733,7 @@ paths:
 
   /categories/{id}:
     get:
+      operationId: getCategoryById
       tags:
         - Categories
       summary: Get category by ID
@@ -759,6 +772,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     put:
+      operationId: updateCategory
       tags:
         - Categories
       summary: Update category
@@ -817,6 +831,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     delete:
+      operationId: deleteCategory
       tags:
         - Categories
       summary: Delete category
@@ -865,6 +880,7 @@ paths:
   # Customer Endpoints
   /customers:
     get:
+      operationId: getAllCustomers
       tags:
         - Customers
       summary: Get all customers
@@ -895,6 +911,7 @@ paths:
 
   /customers/{id}:
     get:
+      operationId: getCustomerById
       tags:
         - Customers
       summary: Get customer by ID
@@ -941,6 +958,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     put:
+      operationId: updateCustomer
       tags:
         - Customers
       summary: Update customer
@@ -999,6 +1017,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     delete:
+      operationId: deleteCustomer
       tags:
         - Customers
       summary: Delete customer
