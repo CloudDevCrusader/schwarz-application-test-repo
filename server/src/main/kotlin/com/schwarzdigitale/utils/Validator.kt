@@ -4,7 +4,7 @@ object Validator {
     // Constants
     private const val MIN_PUBLISHING_YEAR = 1000
     private const val MAX_PUBLISHING_YEAR = 2100
-    
+
     // Regex that prevents consecutive dots, leading/trailing dots
     private val emailRegex = "^[A-Za-z0-9+_-]+(\\.[A-Za-z0-9+_-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$".toRegex()
 
@@ -62,8 +62,10 @@ object Validator {
 
     fun validatePublishingYear(year: Int): ValidationResult {
         return when {
-            year < MIN_PUBLISHING_YEAR || year > MAX_PUBLISHING_YEAR -> 
-                ValidationResult.Invalid("Invalid publishing year. Must be between $MIN_PUBLISHING_YEAR and $MAX_PUBLISHING_YEAR")
+            year < MIN_PUBLISHING_YEAR || year > MAX_PUBLISHING_YEAR ->
+                ValidationResult.Invalid(
+                    "Invalid publishing year. Must be between $MIN_PUBLISHING_YEAR and $MAX_PUBLISHING_YEAR",
+                )
             else -> ValidationResult.Valid
         }
     }

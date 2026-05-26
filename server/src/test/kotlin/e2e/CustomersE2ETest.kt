@@ -65,9 +65,10 @@ class CustomersE2ETest {
             assertNotNull(token)
 
             // Step 3: Get customer by ID
-            val getResponse = client.get("/customers/${createdCustomer.id}") {
-                bearerAuth(token)
-            }
+            val getResponse =
+                client.get("/customers/${createdCustomer.id}") {
+                    bearerAuth(token)
+                }
 
             assertEquals(HttpStatusCode.OK, getResponse.status)
             val fetchedCustomer = getResponse.body<CustomerResponse>()
