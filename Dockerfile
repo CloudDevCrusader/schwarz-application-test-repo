@@ -39,10 +39,10 @@ COPY core core/
 COPY server server/
 COPY client client/
 
-# Build the application
+# Build the application (skip tests and ktlint - those run in separate CI jobs)
 RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && \
     sdk use java 25.0.3-tem && \
-    ./gradlew :server:build -x test --no-daemon"
+    ./gradlew :server:build -x test -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck -x ktlintKotlinScriptCheck --no-daemon"
 
 # Stage 2: Runtime stage
 FROM ubuntu:22.04
