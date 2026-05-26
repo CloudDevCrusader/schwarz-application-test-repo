@@ -4,6 +4,7 @@ import com.schwarzdigital.auth.ErrorResponse
 import com.schwarzdigital.domain.models.BookCreateRequest
 import com.schwarzdigital.domain.models.BookUpdateRequest
 import com.schwarzdigital.domain.repositories.BookRepository
+import com.schwarzdigital.utils.Validator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -86,35 +87,42 @@ fun Route.bookRoutes(bookRepository: BookRepository) {
                 try {
                     val request = call.receive<BookCreateRequest>()
 
-                    // Validate request
-                    if (request.title.isBlank()) {
+                    // Validate title
+                    val titleValidation = Validator.validateBookTitle(request.title)
+                    if (!titleValidation.isValid()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse("VALIDATION_ERROR", "Book title cannot be blank"),
+                            ErrorResponse("VALIDATION_ERROR", titleValidation.getErrorMessage() ?: "Invalid title"),
                         )
                         return@post
                     }
 
-                    if (request.author.isBlank()) {
+                    // Validate author
+                    val authorValidation = Validator.validateAuthor(request.author)
+                    if (!authorValidation.isValid()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse("VALIDATION_ERROR", "Book author cannot be blank"),
+                            ErrorResponse("VALIDATION_ERROR", authorValidation.getErrorMessage() ?: "Invalid author"),
                         )
                         return@post
                     }
 
-                    if (request.publisher.isBlank()) {
+                    // Validate publisher
+                    val publisherValidation = Validator.validatePublisher(request.publisher)
+                    if (!publisherValidation.isValid()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse("VALIDATION_ERROR", "Book publisher cannot be blank"),
+                            ErrorResponse("VALIDATION_ERROR", publisherValidation.getErrorMessage() ?: "Invalid publisher"),
                         )
                         return@post
                     }
 
-                    if (request.publishingYear < 1000 || request.publishingYear > 2100) {
+                    // Validate publishing year
+                    val yearValidation = Validator.validatePublishingYear(request.publishingYear)
+                    if (!yearValidation.isValid()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse("VALIDATION_ERROR", "Invalid publishing year"),
+                            ErrorResponse("VALIDATION_ERROR", yearValidation.getErrorMessage() ?: "Invalid publishing year"),
                         )
                         return@post
                     }
@@ -148,42 +156,49 @@ fun Route.bookRoutes(bookRepository: BookRepository) {
 
                     val request = call.receive<BookUpdateRequest>()
 
-                    // Validate request
+                    // Validate title if provided
                     request.title?.let { title ->
-                        if (title.isBlank()) {
+                        val validation = Validator.validateBookTitle(title)
+                        if (!validation.isValid()) {
                             call.respond(
                                 HttpStatusCode.BadRequest,
-                                ErrorResponse("VALIDATION_ERROR", "Book title cannot be blank"),
+                                ErrorResponse("VALIDATION_ERROR", validation.getErrorMessage() ?: "Invalid title"),
                             )
                             return@put
                         }
                     }
 
+                    // Validate author if provided
                     request.author?.let { author ->
-                        if (author.isBlank()) {
+                        val validation = Validator.validateAuthor(author)
+                        if (!validation.isValid()) {
                             call.respond(
                                 HttpStatusCode.BadRequest,
-                                ErrorResponse("VALIDATION_ERROR", "Book author cannot be blank"),
+                                ErrorResponse("VALIDATION_ERROR", validation.getErrorMessage() ?: "Invalid author"),
                             )
                             return@put
                         }
                     }
 
+                    // Validate publisher if provided
                     request.publisher?.let { publisher ->
-                        if (publisher.isBlank()) {
+                        val validation = Validator.validatePublisher(publisher)
+                        if (!validation.isValid()) {
                             call.respond(
                                 HttpStatusCode.BadRequest,
-                                ErrorResponse("VALIDATION_ERROR", "Book publisher cannot be blank"),
+                                ErrorResponse("VALIDATION_ERROR", validation.getErrorMessage() ?: "Invalid publisher"),
                             )
                             return@put
                         }
                     }
 
+                    // Validate publishing year if provided
                     request.publishingYear?.let { year ->
-                        if (year < 1000 || year > 2100) {
+                        val validation = Validator.validatePublishingYear(year)
+                        if (!validation.isValid()) {
                             call.respond(
                                 HttpStatusCode.BadRequest,
-                                ErrorResponse("VALIDATION_ERROR", "Invalid publishing year"),
+                                ErrorResponse("VALIDATION_ERROR", validation.getErrorMessage() ?: "Invalid publishing year"),
                             )
                             return@put
                         }

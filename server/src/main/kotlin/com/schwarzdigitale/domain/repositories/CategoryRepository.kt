@@ -64,7 +64,7 @@ class CategoryRepository {
             val updateCount =
                 Categories.update({ Categories.id eq id }) {
                     request.name?.let { name -> it[Categories.name] = name }
-                    request.description?.let { desc -> it[description] = desc }
+                    request.description?.let { description -> it[Categories.description] = description }
                     it[updatedAt] = Instant.now()
                 }
             updateCount > 0

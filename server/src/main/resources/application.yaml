@@ -5,7 +5,6 @@ ktor:
     modules:
       - com.schwarzdigital.HttpKt.configureHttp
       - com.schwarzdigital.SerializationKt.configureSerialization
-      - com.schwarzdigital.ServerOpenTelemetryKt.configureOpenTelemetry
       - com.schwarzdigital.StatusPagesKt.configureStatusPages
       - com.schwarzdigital.auth.AuthConfigKt.configureAuth
       - com.schwarzdigital.DatabaseKt.configureDatabase

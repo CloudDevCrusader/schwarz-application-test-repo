@@ -137,6 +137,160 @@ class ValidatorTest : FunSpec({
         }
     }
 
+    context("Book title validation") {
+
+        test("should accept valid book titles") {
+            val validTitles =
+                listOf(
+                    "The Great Gatsby",
+                    "1984",
+                    "To Kill a Mockingbird",
+                    "A",
+                )
+
+            validTitles.forEach { title ->
+                val result = Validator.validateBookTitle(title)
+                result.shouldBeInstanceOf<ValidationResult.Valid>()
+            }
+        }
+
+        test("should reject blank titles") {
+            val result = Validator.validateBookTitle("   ")
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Book title cannot be blank"
+        }
+
+        test("should reject titles exceeding 255 characters") {
+            val longTitle = "A".repeat(256)
+            val result = Validator.validateBookTitle(longTitle)
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Book title must not exceed 255 characters"
+        }
+    }
+
+    context("Author validation") {
+
+        test("should accept valid authors") {
+            val validAuthors =
+                listOf(
+                    "F. Scott Fitzgerald",
+                    "George Orwell",
+                    "J.K. Rowling",
+                )
+
+            validAuthors.forEach { author ->
+                val result = Validator.validateAuthor(author)
+                result.shouldBeInstanceOf<ValidationResult.Valid>()
+            }
+        }
+
+        test("should reject blank authors") {
+            val result = Validator.validateAuthor("   ")
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Book author cannot be blank"
+        }
+    }
+
+    context("Publisher validation") {
+
+        test("should accept valid publishers") {
+            val validPublishers =
+                listOf(
+                    "Penguin Random House",
+                    "HarperCollins",
+                    "Simon & Schuster",
+                )
+
+            validPublishers.forEach { publisher ->
+                val result = Validator.validatePublisher(publisher)
+                result.shouldBeInstanceOf<ValidationResult.Valid>()
+            }
+        }
+
+        test("should reject blank publishers") {
+            val result = Validator.validatePublisher("   ")
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Book publisher cannot be blank"
+        }
+    }
+
+    context("Publishing year validation") {
+
+        test("should accept valid years") {
+            val validYears = listOf(1000, 1500, 1925, 2000, 2024, 2100)
+
+            validYears.forEach { year ->
+                val result = Validator.validatePublishingYear(year)
+                result.shouldBeInstanceOf<ValidationResult.Valid>()
+            }
+        }
+
+        test("should reject years before 1000") {
+            val result = Validator.validatePublishingYear(999)
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Invalid publishing year. Must be between 1000 and 2100"
+        }
+
+        test("should reject years after 2100") {
+            val result = Validator.validatePublishingYear(2101)
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Invalid publishing year. Must be between 1000 and 2100"
+        }
+    }
+
+    context("Category name validation") {
+
+        test("should accept valid category names") {
+            val validNames =
+                listOf(
+                    "Science Fiction",
+                    "Mystery",
+                    "Non-Fiction",
+                )
+
+            validNames.forEach { name ->
+                val result = Validator.validateCategoryName(name)
+                result.shouldBeInstanceOf<ValidationResult.Valid>()
+            }
+        }
+
+        test("should reject blank category names") {
+            val result = Validator.validateCategoryName("   ")
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Category name cannot be blank"
+        }
+
+        test("should reject category names exceeding 255 characters") {
+            val longName = "A".repeat(256)
+            val result = Validator.validateCategoryName(longName)
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Category name must not exceed 255 characters"
+        }
+    }
+
+    context("Category description validation") {
+
+        test("should accept valid category descriptions") {
+            val validDescriptions =
+                listOf(
+                    "Books about science and technology",
+                    "Mystery and thriller novels",
+                    "A".repeat(1000),
+                )
+
+            validDescriptions.forEach { description ->
+                val result = Validator.validateCategoryDescription(description)
+                result.shouldBeInstanceOf<ValidationResult.Valid>()
+            }
+        }
+
+        test("should reject blank category descriptions") {
+            val result = Validator.validateCategoryDescription("   ")
+            result.shouldBeInstanceOf<ValidationResult.Invalid>()
+            result.getErrorMessage() shouldBe "Category description cannot be blank"
+        }
+    }
+
     context("ValidationResult") {
 
         test("Valid result should return true for isValid()") {

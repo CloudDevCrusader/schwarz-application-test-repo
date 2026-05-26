@@ -9,10 +9,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.opentelemetry.exporterOtlp)
-            api(libs.opentelemetry.ktorInstrumentation)
-            api(libs.opentelemetry.sdkAutoconfigure)
-            api(libs.opentelemetry.semconv)
+            // OpenTelemetry dependencies removed
         }
 
         commonTest.dependencies {

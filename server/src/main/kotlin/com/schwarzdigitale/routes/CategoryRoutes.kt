@@ -4,6 +4,7 @@ import com.schwarzdigital.auth.ErrorResponse
 import com.schwarzdigital.domain.models.CategoryCreateRequest
 import com.schwarzdigital.domain.models.CategoryUpdateRequest
 import com.schwarzdigital.domain.repositories.CategoryRepository
+import com.schwarzdigital.utils.Validator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -64,19 +65,22 @@ fun Route.categoryRoutes(categoryRepository: CategoryRepository) {
                 try {
                     val request = call.receive<CategoryCreateRequest>()
 
-                    // Validate request
-                    if (request.name.isBlank()) {
+                    // Validate name
+                    val nameValidation = Validator.validateCategoryName(request.name)
+                    if (!nameValidation.isValid()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse("VALIDATION_ERROR", "Category name cannot be blank"),
+                            ErrorResponse("VALIDATION_ERROR", nameValidation.getErrorMessage() ?: "Invalid category name"),
                         )
                         return@post
                     }
 
-                    if (request.description.isBlank()) {
+                    // Validate description
+                    val descriptionValidation = Validator.validateCategoryDescription(request.description)
+                    if (!descriptionValidation.isValid()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse("VALIDATION_ERROR", "Category description cannot be blank"),
+                            ErrorResponse("VALIDATION_ERROR", descriptionValidation.getErrorMessage() ?: "Invalid category description"),
                         )
                         return@post
                     }
@@ -105,22 +109,25 @@ fun Route.categoryRoutes(categoryRepository: CategoryRepository) {
 
                     val request = call.receive<CategoryUpdateRequest>()
 
-                    // Validate request
+                    // Validate name if provided
                     request.name?.let { name ->
-                        if (name.isBlank()) {
+                        val validation = Validator.validateCategoryName(name)
+                        if (!validation.isValid()) {
                             call.respond(
                                 HttpStatusCode.BadRequest,
-                                ErrorResponse("VALIDATION_ERROR", "Category name cannot be blank"),
+                                ErrorResponse("VALIDATION_ERROR", validation.getErrorMessage() ?: "Invalid category name"),
                             )
                             return@put
                         }
                     }
 
+                    // Validate description if provided
                     request.description?.let { description ->
-                        if (description.isBlank()) {
+                        val validation = Validator.validateCategoryDescription(description)
+                        if (!validation.isValid()) {
                             call.respond(
                                 HttpStatusCode.BadRequest,
-                                ErrorResponse("VALIDATION_ERROR", "Category description cannot be blank"),
+                                ErrorResponse("VALIDATION_ERROR", validation.getErrorMessage() ?: "Invalid category description"),
                             )
                             return@put
                         }
