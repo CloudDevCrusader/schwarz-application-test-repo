@@ -12,7 +12,7 @@ ktor:
       - com.schwarzdigital.RoutingKt.configureRouting
 
 database:
-  embedded: true
+  embedded: false
   url: "jdbc:postgresql://localhost:5432/library"
   user: "postgres"
   password: "postgres"
